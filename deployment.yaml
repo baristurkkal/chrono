@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-chronosphere
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-chronosphere
+  template:
+    metadata:
+      labels:
+        app: hello-chronosphere
+    spec:
+      containers:
+        - name: hello-chronosphere
+          image: hello-chronosphere:8081
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
